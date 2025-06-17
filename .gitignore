@@ -3,8 +3,11 @@ credentials.json
 .env
 config.json
 
-# Вложенные репозитории
+# Memory Bank папки (исключаем все варианты)
 cursor-memory-bank/
+memory-bank/
+*memory-bank*/
+*memory*bank*/
 
 # Токены и ключи
 *.key
