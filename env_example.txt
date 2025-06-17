@@ -1,0 +1,13 @@
+# Скопируйте этот файл в .env и заполните своими данными
+
+# Настройки Gmail
+EMAIL=your_email@gmail.com
+PASSWORD=your_app_password
+
+# Настройки GitHub для фида
+GITHUB_TOKEN=your_github_token_here
+GITHUB_REPO=username/repository-name
+FEED_URL=https://username.github.io/repository-name/price_for_emex.csv
+
+# Другие настройки
+IMAP_SERVER=imap.gmail.com 
