@@ -1,0 +1,25 @@
+# Пример настройки cron для автоматического обновления фида EMEX
+
+# Запуск каждый день в 6:00 утра
+0 6 * * * cd /path/to/your/project && docker-compose exec emex-processor python main.py
+
+# Запуск каждые 12 часов (в 6:00 и 18:00)
+0 6,18 * * * cd /path/to/your/project && docker-compose exec emex-processor python main.py
+
+# Запуск каждые 6 часов
+0 */6 * * * cd /path/to/your/project && docker-compose exec emex-processor python main.py
+
+# Запуск в понедельник, среду, пятницу в 9:00
+0 9 * * 1,3,5 cd /path/to/your/project && docker-compose exec emex-processor python main.py
+
+# Как установить cron:
+# 1. Откройте crontab: crontab -e
+# 2. Добавьте нужную строку из примеров выше
+# 3. Замените /path/to/your/project на реальный путь к проекту
+# 4. Сохраните и выйдите
+
+# Для просмотра активных cron задач:
+# crontab -l
+
+# Для удаления всех cron задач:
+# crontab -r 

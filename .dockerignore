@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Документация
+README.md
+SETUP_FEED.md
+
+# Среды разработки
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# Виртуальные среды
+venv/
+env/
+.venv/
+
+# Рабочие папки (будут монтироваться)
+downloads/
+result/
+
+# Конфиденциальные файлы
+.env
+credentials.json
+
+# Временные файлы
+*.tmp
+*.log
+*.zip
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Системные файлы
+.DS_Store
+Thumbs.db 

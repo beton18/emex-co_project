@@ -230,7 +230,7 @@ def upload_feed_to_github(csv_file_path):
         response = requests.put(url, json=data, headers=headers)
         
         if response.status_code in [200, 201]:
-            feed_url = f"https://{GITHUB_REPO.split('/')[0]}.github.io/{GITHUB_REPO.split('/')[1]}/price_for_emex.csv"
+            feed_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/price_for_emex.csv"
             print(f"✅ Фид успешно загружен!")
             print(f"🔗 Ссылка на фид: {feed_url}")
             return True
@@ -308,14 +308,13 @@ def process_price_files(xlsx_files, stock_df):
 
                 # Переупорядочиваем столбцы в новом порядке
                 final_csv = grouped_csv[['№ Детали', 'Наименование', 'Марка', 'Цена', 'Остатки', 'Кратность']]
-                final_csv.columns = ['№ детали', 'Наименование', 'Марка', 'Цена', 'Количество', 'Партионность']
                 
                 final_xlsx = grouped[['№ Детали', 'Наименование', 'Марка', 'Цена', 'Остатки', 'Кратность']]
                 final_xlsx.columns = ['№ детали', 'Наименование', 'Марка', 'Цена', 'Количество', 'Партионность']
 
                 # Сохраняем CSV файл
                 result_path_csv = os.path.join(RESULT_DIR, "price_for_emex.csv")
-                final_csv.to_csv(result_path_csv, index=False, sep=';', encoding='utf-8-sig')
+                final_csv.to_csv(result_path_csv, index=False, header=False, sep=',', encoding='utf-8-sig')
                 print(f"Создан CSV файл: {result_path_csv}")
                 
                 # Сохраняем XLSX файл

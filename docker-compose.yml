@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  emex-processor:
+    build: .
+    container_name: emex-processor
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    volumes:
+      # Монтируем папки для данных (опционально)
+      - ./downloads:/app/downloads
+      - ./result:/app/result
+      # Монтируем .env файл
+      - ./.env:/app/.env
+    # Для крон-задачи можно запускать по расписанию
+    # Пример: каждый день в 6:00
+    # command: ["sh", "-c", "while true; do python main.py; sleep 86400; done"]
+    
+
+
+networks:
+  default:
+    name: emex-network 
