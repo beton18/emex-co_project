@@ -3,6 +3,9 @@ credentials.json
 .env
 config.json
 
+# Вложенные репозитории
+cursor-memory-bank/
+
 # Токены и ключи
 *.key
 *.pem
