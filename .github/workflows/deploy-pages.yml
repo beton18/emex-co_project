@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+    paths: 
+      - 'price_for_emex.csv'  # Запускаем только при изменении фида
   workflow_dispatch:
 
 # Управление конкурентностью - только один деплой одновременно

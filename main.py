@@ -201,9 +201,6 @@ def upload_feed_to_github(csv_file_path):
         with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
             content = file.read()
         
-        # Кодируем в base64 для GitHub API
-        encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
-        
         # Данные для GitHub API
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/price_for_emex.csv"
         headers = {
@@ -214,8 +211,23 @@ def upload_feed_to_github(csv_file_path):
         # Проверяем, существует ли файл (для обновления нужен SHA)
         get_response = requests.get(url, headers=headers)
         sha = None
+        current_content = None
+        
         if get_response.status_code == 200:
-            sha = get_response.json()['sha']
+            file_data = get_response.json()
+            sha = file_data['sha']
+            # Декодируем существующее содержимое
+            current_content = base64.b64decode(file_data['content']).decode('utf-8')
+        
+        # Проверяем, изменилось ли содержимое
+        if current_content == content:
+            print("📄 Данные не изменились, загрузка не требуется")
+            return True
+        
+        print("📄 Обнаружены изменения в данных, загружаем...")
+        
+        # Кодируем в base64 для GitHub API
+        encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
         
         # Данные для создания/обновления файла
         data = {
