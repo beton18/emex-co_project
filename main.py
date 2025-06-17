@@ -9,9 +9,27 @@ import requests
 import base64
 from datetime import datetime
 from dotenv import load_dotenv
+import hashlib
 
 # Загрузка переменных окружения из .env файла
 load_dotenv()
+
+# Функция для проверки уже обработанных архивов
+def is_archive_processed(filename):
+    """Проверяет, был ли уже обработан данный архив"""
+    processed_file = "processed_archives.txt"
+    if os.path.exists(processed_file):
+        with open(processed_file, 'r', encoding='utf-8') as f:
+            processed = f.read().splitlines()
+        return filename in processed
+    return False
+
+def mark_archive_processed(filename):
+    """Отмечает архив как обработанный"""
+    processed_file = "processed_archives.txt"
+    with open(processed_file, 'a', encoding='utf-8') as f:
+        f.write(f"{filename}\n")
+    print(f"📝 Архив {filename} отмечен как обработанный")
 
 """
 ИСТОРИЯ ИЗМЕНЕНИЙ:
@@ -197,10 +215,14 @@ def upload_feed_to_github(csv_file_path):
         return False
     
     try:
-        # Читаем содержимое файла
+        # Читаем содержимое файла (убираем BOM для корректного сравнения)
         with open(csv_file_path, 'r', encoding='utf-8-sig') as file:
             content = file.read()
         
+        # Убираем BOM если есть для корректного сравнения
+        if content.startswith('\ufeff'):
+            content = content[1:]
+            
         # Данные для GitHub API
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/price_for_emex.csv"
         headers = {
@@ -225,6 +247,16 @@ def upload_feed_to_github(csv_file_path):
             return True
         
         print("📄 Обнаружены изменения в данных, загружаем...")
+        
+        # Дополнительное логирование для отладки
+        if current_content:
+            print(f"🔍 Длина старого файла: {len(current_content)} символов")
+            print(f"🔍 Длина нового файла: {len(content)} символов")
+            if len(current_content) > 100 and len(content) > 100:
+                print(f"🔍 Первые 100 символов старого: {repr(current_content[:100])}")
+                print(f"🔍 Первые 100 символов нового: {repr(content[:100])}")
+        else:
+            print("🔍 Старый файл не найден - это первая загрузка")
         
         # Кодируем в base64 для GitHub API
         encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
@@ -351,8 +383,12 @@ def process_price_files(xlsx_files, stock_df):
 if __name__ == "__main__":
     zip_file = get_mail_attachments()
     if zip_file:
-        extracted = unzip_archive(zip_file)
-        stock_df = load_stock_data(extracted)
-        process_price_files(extracted, stock_df)
+        if is_archive_processed(zip_file):
+            print(f"Архив {zip_file} уже обработан. Пропускаем обработку.")
+        else:
+            extracted = unzip_archive(zip_file)
+            stock_df = load_stock_data(extracted)
+            process_price_files(extracted, stock_df)
+            mark_archive_processed(zip_file)
     else:
         print("Архив не найден.")

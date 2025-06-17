@@ -12,6 +12,9 @@ memory-bank/
 # GitHub Actions (пусть будет в репозитории)
 # .github/
 
+# Файлы отслеживания обработки
+processed_archives.txt
+
 # Токены и ключи
 *.key
 *.pem
