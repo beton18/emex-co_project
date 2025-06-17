@@ -9,7 +9,7 @@ on:
 
 # Управление конкурентностью - только один деплой одновременно
 concurrency:
-  group: pages
+  group: pages-deploy
   cancel-in-progress: true
 
 permissions:
@@ -23,6 +23,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    
+    # Добавляем условие: запускать только если файл действительно изменился
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.modified, 'price_for_emex.csv'))
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4

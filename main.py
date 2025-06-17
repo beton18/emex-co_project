@@ -21,15 +21,28 @@ def is_archive_processed(filename):
     if os.path.exists(processed_file):
         with open(processed_file, 'r', encoding='utf-8') as f:
             processed = f.read().splitlines()
-        return filename in processed
+        
+        # Проверяем только имя файла (первая часть до |)
+        processed_names = [line.split('|')[0] for line in processed if '|' in line]
+        return os.path.basename(filename) in processed_names
     return False
 
 def mark_archive_processed(filename):
-    """Отмечает архив как обработанный"""
+    """Отмечает архив как обработанный с датой и хешем"""
     processed_file = "processed_archives.txt"
+    
+    # Вычисляем хеш файла
+    file_hash = "unknown"
+    if os.path.exists(filename):
+        with open(filename, 'rb') as f:
+            file_hash = hashlib.md5(f.read()).hexdigest()[:8]
+    
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    entry = f"{os.path.basename(filename)}|{timestamp}|{file_hash}"
+    
     with open(processed_file, 'a', encoding='utf-8') as f:
-        f.write(f"{filename}\n")
-    print(f"📝 Архив {filename} отмечен как обработанный")
+        f.write(f"{entry}\n")
+    print(f"📝 Архив {os.path.basename(filename)} отмечен как обработанный (хеш: {file_hash})")
 
 """
 ИСТОРИЯ ИЗМЕНЕНИЙ:
