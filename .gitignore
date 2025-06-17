@@ -9,6 +9,9 @@ memory-bank/
 *memory-bank*/
 *memory*bank*/
 
+# GitHub Actions (пусть будет в репозитории)
+# .github/
+
 # Токены и ключи
 *.key
 *.pem
