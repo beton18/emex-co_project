@@ -13,7 +13,11 @@ memory-bank/
 # .github/
 
 # Файлы отслеживания обработки
-processed_archives.txt
+processed_emails.txt
+
+# Лог файлы
+emex_log_*.log
+*.log
 
 # Токены и ключи
 *.key
