@@ -12,12 +12,6 @@
 # Запуск в понедельник, среду, пятницу в 9:00
 0 9 * * 1,3,5 cd /path/to/your/project && docker-compose exec emex-processor python main.py
 
-# Запуск обработки EMEX каждый день в 16:45 (13:45 серверное время UTC)
-45 13 * * * cd /home/dev.vazovski.art/public_html/emex_project && /usr/bin/docker-compose up --build >> /tmp/emex_cron.log 2>&1
-
-# Альтернативная команда с полными путями (если первая не работает):
-# 45 13 * * * cd /home/dev.vazovski.art/public_html/emex_project && /usr/local/bin/docker-compose up --build >> /tmp/emex_cron.log 2>&1
-
 # Как установить cron:
 # 1. Откройте crontab: crontab -e
 # 2. Добавьте нужную строку из примеров выше
